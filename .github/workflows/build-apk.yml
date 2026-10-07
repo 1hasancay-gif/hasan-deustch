@@ -1,0 +1,31 @@
+name: Hasan Deutsch APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository indir
+        uses: actions/checkout@v4
+
+      - name: Android projesini çıkar
+        run: |
+          mkdir -p android_project
+          unzip -o Hasan_Deutsch_100_Cumle_Android.zip -d android_project
+
+      - name: Gradle ile APK oluştur
+        working-directory: android_project/android_wrapper
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: APK'yı yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hasan-Deutsch-APK
+          path: android_project/android_wrapper/app/build/outputs/apk/debug/app-debug.apk
